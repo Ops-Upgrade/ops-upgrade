@@ -79,3 +79,24 @@ This document outlines the strict chronological order for implementing `ops-upgr
    - Replicate the space-y-8 layout container, the exact greeting parsing (user.email.split('@')[0]), and the subtitle ('Here''s an overview of your personal tracker.').
 3. **1:1 Card Components**: 
    - Instead of a generic .gem-tile, use one of the exact SVGs, border colors, and hover effects from personal_tracker (e.g., the Blue Task Manager styling) for the 'Your Personal Tracker' link.
+
+---
+
+## Phase 6: Vercel Deployment & React Hydration Fixes
+*Goal: Port critical production fixes from `personal_tracker` (August 10, 2026 commits) to ensure deployment stability on Vercel and prevent React hydration/render loops.*
+
+1. **Theme Switcher Hydration Mismatch**:
+   - Update `ThemeSwitcher.tsx` to include a `mounted` state.
+   - Delay rendering the interactive icon until the client has mounted (render a same-sized placeholder `div` initially) to prevent SSR vs. Client hydration mismatch errors.
+2. **Strict CSP & Vercel Preview Toolbar Blocking**:
+   - Update `src/proxy.ts` to generate a per-request `x-nonce`.
+   - Ensure the `Content-Security-Policy` header is explicitly attached to the `NextRequest`, the `NextResponse`, and any redirect responses.
+   - Add specific CSP rules to allow `https://vercel.live` strictly in preview environments.
+3. **Dynamic Auth Layout**:
+   - Add `export const dynamic = "force-dynamic";` to any layout managing dynamic state or relying on middleware nonces (e.g., `(auth)/layout.tsx` if it exists) to prevent Next.js from statically caching stale nonces.
+4. **Infinite Render Loop Prevention**:
+   - If reusing `GenericDomainModal` or similar heavy components, extract all inline default array props (e.g., `fields = []`) into stable top-level constants (e.g., `EMPTY_FIELDS = []`) to prevent infinite re-render loops in React `useEffect` hooks.
+5. **Icon Implementation Parity**:
+   - In `src/app/page.tsx`, remove the `lucide-react` import for the `Layers` icon.
+   - Extract the raw `<svg>` and `<path>` data for the `Layers` icon and embed it directly as an inline element.
+   - Ensure the inline `<svg>` uses the exact attributes as the original dashboard tiles (`fill="none"`, `viewBox="0 0 24 24"`, `strokeWidth={1.5}`, `stroke="currentColor"`).

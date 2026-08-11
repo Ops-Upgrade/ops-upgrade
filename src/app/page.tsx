@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
-import { Layers } from "lucide-react";
 
 export const metadata = {
   title: "Ops Upgrade",
@@ -45,7 +44,17 @@ export default async function Home() {
               className="rounded-xl border border-blue-200 bg-white p-6 shadow-sm transition hover:border-blue-300 hover:shadow-md dark:border-blue-900/60 dark:bg-zinc-900 dark:hover:border-blue-800"
             >
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                <Layers className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <svg
+                className="h-5 w-5 text-blue-600 dark:text-blue-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+              >
+                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                <polyline points="2 17 12 22 22 17" />
+                <polyline points="2 12 12 17 22 12" />
+              </svg>
               </div>
               <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 Your Personal Tracker
@@ -61,7 +70,17 @@ export default async function Home() {
               className="block rounded-xl border border-blue-200 bg-white p-6 shadow-sm transition hover:border-blue-300 hover:shadow-md dark:border-blue-900/60 dark:bg-zinc-900 dark:hover:border-blue-800"
             >
               <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                <Layers className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <svg
+                className="h-5 w-5 text-blue-600 dark:text-blue-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+              >
+                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                <polyline points="2 17 12 22 22 17" />
+                <polyline points="2 12 12 17 22 12" />
+              </svg>
               </div>
               <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 Log in to view content
