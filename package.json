@@ -9,13 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ops-upgrade/auth-core": "^1.0.0",
+    "@ops-upgrade/auth-core": "2.0.0",
     "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.112.2",
     "@wrksz/themes": "^0.9.7",
     "clsx": "^2.1.1",
     "lucide-react": "^1.31.0",
-    "next": "16.3.0",
+    "next": "16.3.7",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
@@ -29,5 +29,9 @@
     "eslint-config-next": "16.3.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^5"
+  },
+  "overrides": {
+    "js-yaml": "^4.3.2",
+    "sharp": "^0.35.4"
   }
 }

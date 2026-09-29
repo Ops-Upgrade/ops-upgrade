@@ -5,7 +5,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import ThemeProvider from "@/components/layout/ThemeProvider";
 import { createServerClient } from "@ops-upgrade/auth-core";
-import Navbar from "@/components/layout/Navbar";
+import NavbarWrapper from "@/components/layout/NavbarWrapper";
+import PublicHeader from "@/components/layout/PublicHeader";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,24 +40,32 @@ export default async function RootLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Resolve avatar URL from Supabase Storage (matches personal_tracker logic)
+  // Map user metadata to the shared auth-core Navbar shape. user_metadata is
+  // user-writable, so coerce types and reject non-https avatars before use.
   const meta = user?.user_metadata as Record<string, unknown> | undefined;
-  const userName =
-    typeof meta?.full_name === "string" && meta.full_name
-      ? (meta.full_name as string)
-      : null;
-  let userAvatarUrl: string | null = null;
-  const avatarTs =
-    typeof meta?.avatar_updated_at === "string"
-      ? (meta.avatar_updated_at as string)
-      : null;
-  if (avatarTs && user) {
-    const { data } = supabase.storage
-      .from("avatars")
-      .getPublicUrl(`${user.id}/avatar.jpg`);
-    if (data?.publicUrl) {
-      userAvatarUrl = `${data.publicUrl}?t=${encodeURIComponent(avatarTs)}`;
+  let navbarUser: {
+    email: string;
+    name: string | null;
+    avatarUrl: string | null;
+  } | null = null;
+  if (user?.email) {
+    const rawName = meta?.full_name ?? meta?.name;
+    const name = typeof rawName === "string" ? rawName.trim() : null;
+    const finalName = name === "" ? null : name;
+    let avatarUrl: string | null = null;
+    const avatarTs =
+      typeof meta?.avatar_updated_at === "string"
+        ? meta.avatar_updated_at
+        : null;
+    if (avatarTs && user) {
+      const { data } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(`${user.id}/avatar.jpg`);
+      if (data?.publicUrl?.startsWith("https://")) {
+        avatarUrl = `${data.publicUrl}?t=${encodeURIComponent(avatarTs)}`;
+      }
     }
+    navbarUser = { email: user.email, name: finalName, avatarUrl };
   }
 
   return (
@@ -64,11 +73,14 @@ export default async function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider nonce={nonce}>
           <div className="min-h-screen">
-            <Navbar
-              userEmail={user?.email ?? null}
-              userName={userName}
-              userAvatarUrl={userAvatarUrl}
-            />
+            {navbarUser ? (
+              <NavbarWrapper
+                user={navbarUser}
+                serverDate={new Date().toISOString()}
+              />
+            ) : (
+              <PublicHeader />
+            )}
             {children}
           </div>
         </ThemeProvider>
