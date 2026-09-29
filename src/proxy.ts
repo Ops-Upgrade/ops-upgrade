@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { createClient } from "@/lib/supabase/proxy";
+import { getSessionForRequest } from "@ops-upgrade/auth-core";
 
 const isPreviewEnv = process.env.VERCEL_ENV === "preview";
 const isProdEnv =
@@ -50,16 +50,12 @@ function buildCsp(nonce: string) {
  *
  * This is the "relaxed" middleware for the public landing page:
  * - Generates a per-request nonce for a strict CSP.
- * - Sets the nonce on the request BEFORE createClient so it survives
- *   any internal NextResponse recreation during token refresh.
- * - Refreshes the Supabase session via getClaims() (keeps tokens alive).
- * - Clears stale auth cookies on token validation failure.
+ * - Sets the nonce on the request BEFORE the session refresh so it
+ *   survives any internal NextResponse recreation during token refresh.
+ * - Refreshes the Supabase session via auth-core's getSessionForRequest()
+ *   (which also clears stale auth cookies on refresh-token failure).
  * - NEVER blocks or redirects — all routes are public.
  * - Appends the final CSP header to every returned response.
- *
- * IMPORTANT: Do not run code between createClient and getClaims().
- * getClaims() validates the JWT signature against the project's public keys
- * every time — unlike getSession(), which is not guaranteed to revalidate.
  */
 export async function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
@@ -69,21 +65,7 @@ export async function proxy(request: NextRequest) {
   request.headers.set("x-nonce", nonce);
   request.headers.set("Content-Security-Policy", cspDirectives);
 
-  const { supabase, response } = createClient(request);
-
-  // Refresh the session — getClaims() is safe to trust because it
-  // validates the JWT signature against published public keys.
-  const { error } = await supabase.auth.getClaims();
-
-  // If the refresh token is stale/invalid, clear the auth cookies
-  // so we don't keep retrying on every request.
-  if (error) {
-    request.cookies.getAll().forEach(({ name }) => {
-      if (name.startsWith("sb-")) {
-        response.cookies.delete(name);
-      }
-    });
-  }
+  const { response } = await getSessionForRequest(request);
 
   // NOTE: Unlike personal_tracker, this middleware does NOT redirect
   // unauthenticated users. Every route is public — the session is

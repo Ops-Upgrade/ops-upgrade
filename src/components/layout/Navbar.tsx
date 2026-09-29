@@ -55,14 +55,7 @@ export default function Navbar({ userEmail, userName, userAvatarUrl }: NavbarPro
       : "/images/logo-with-name-light.png";
 
   async function handleLogout() {
-    // Clear all Supabase auth cookies (sb-*), then force a full page reload.
-    document.cookie.split(";").forEach((cookie) => {
-      const [name] = cookie.trim().split("=");
-      if (name.startsWith("sb-")) {
-        document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-      }
-    });
-    window.location.reload();
+    window.location.href = `https://personal.ops-upgrade.net/logout?redirect=${encodeURIComponent(window.location.hostname)}`;
   }
 
   return (

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import ThemeProvider from "@/components/layout/ThemeProvider";
-import { createClient } from "@/lib/supabase/server";
+import { createServerClient } from "@ops-upgrade/auth-core";
 import Navbar from "@/components/layout/Navbar";
 import "./globals.css";
 
@@ -34,7 +34,7 @@ export default async function RootLayout({
   const headersList = await headers();
   const nonce = headersList.get("x-nonce") || "";
 
-  const supabase = await createClient();
+  const supabase = await createServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();

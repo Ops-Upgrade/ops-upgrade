@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServerClient } from "@ops-upgrade/auth-core";
 import Link from "next/link";
 
 export const metadata = {
@@ -14,7 +14,7 @@ export const metadata = {
  * on auth state: guests see a locked tile with a login button.
  */
 export default async function Home() {
-  const supabase = await createClient();
+  const supabase = await createServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
