@@ -9,15 +9,15 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ops-upgrade/auth-core": "2.0.0",
-    "@supabase/ssr": "^0.12.4",
-    "@supabase/supabase-js": "^2.112.2",
+    "@ops-upgrade/auth-core": "2.0.3",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
     "@wrksz/themes": "^0.9.7",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.31.0",
-    "next": "16.3.7",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "lucide-react": "^1.63.0",
+    "next": "16.4.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
@@ -26,12 +26,18 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.0",
+    "eslint-config-next": "16.4.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^5"
   },
   "overrides": {
     "js-yaml": "^4.3.2",
-    "sharp": "^0.35.4"
+    "sharp": "^0.35.5",
+    "zod": "^4.6.7",
+    "source-map-js": "^1.2.2",
+    "postcss-selector-parser": "^6.1.5"
+  },
+  "engines": {
+    "node": ">=26.12.1"
   }
 }

@@ -27,13 +27,14 @@ This repo is **pre-implementation** — the scaffolding has not been built yet. 
 
 ### Cross-Subdomain Auth Model
 
-The root domain (`ops-upgrade.net`) shares auth state with `personal.ops-upgrade.net` via Supabase session cookies scoped to `.ops-upgrade.net`. Three client factories — all ported verbatim from `personal_tracker` — handle different contexts:
+The root domain (`ops-upgrade.net`) shares auth state with `personal.ops-upgrade.net` via Supabase session cookies scoped to `.ops-upgrade.net`. All Supabase clients come from the private `@ops-upgrade/auth-core` package — there are NO local `src/lib/supabase/*` files and none should ever be created (that would reintroduce the duplication auth-core exists to prevent):
 
-- `src/lib/supabase/client.ts` — browser-side Supabase client
-- `src/lib/supabase/server.ts` — server-component client (reads cookies via `cookies().getAll()`)
-- `src/lib/supabase/proxy.ts` — middleware client (reads/writes cookies on `NextResponse`)
+- `createServerClient()` (from `@ops-upgrade/auth-core`) — server-component client (reads cookies)
+- `createBrowserClient()` (from `@ops-upgrade/auth-core`) — browser-side client
+- `getSessionForRequest(request)` (from `@ops-upgrade/auth-core`) — middleware client (reads/writes cookies on the response)
+- `Navbar` / `ThemeSwitcher` (from `@ops-upgrade/auth-core/ui`) — shared UI components
 
-`src/lib/constants.ts` holds `COOKIE_OPTIONS` with the domain scoping via `NEXT_PUBLIC_COOKIE_DOMAIN` (`.ops-upgrade.net` in production, `localhost` in dev).
+Cookie options are centralized in auth-core (`COOKIE_OPTIONS`; `NEXT_PUBLIC_COOKIE_DOMAIN` = `.ops-upgrade.net` in production, `localhost` in dev). Keep this repo's `@supabase/ssr` / `@supabase/supabase-js` ranges matched to auth-core's published versions so npm hoists a single shared Supabase stack.
 
 ### The "Relaxed" Middleware (Key Difference)
 
