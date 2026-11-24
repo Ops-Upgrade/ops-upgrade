@@ -9,13 +9,15 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ops-upgrade/auth-core": "2.0.3",
+    "@ops-upgrade/auth-core": "3.0.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.38.0",
     "@wrksz/themes": "^0.9.7",
     "clsx": "^2.1.1",
     "lucide-react": "^1.63.0",
-    "next": "16.4.3",
+    "next": "16.4.6",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },
@@ -26,7 +28,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.4.3",
+    "eslint-config-next": "16.4.6",
     "tailwindcss": "^4.3.3",
     "typescript": "^5"
   },
