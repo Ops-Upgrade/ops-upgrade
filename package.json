@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ops-upgrade/auth-core": "3.0.0",
+    "@ops-upgrade/auth-core": "3.0.1",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
     "@upstash/ratelimit": "^2.0.8",
