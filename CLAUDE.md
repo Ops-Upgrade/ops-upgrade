@@ -76,3 +76,7 @@ The Navbar (`src/components/layout/Navbar.tsx`) also bifurcates on auth state â€
 - The `brace-expansion` package must NOT have an override in `package.json` (it breaks the Vercel deployment linter).
 - Auth cookies are set with `SameSite=Lax` â€” sufficient for same-subdomain navigation, no `SameSite=None` needed.
 - "Sign Out" clears shared Supabase cookies and refreshes the page; it does NOT clear `personal-tracker`-specific caches.
+
+## Local checks
+
+- **Pre-push gate:** `.githooks/pre-push` (npm audit + compromised-package cross-check + gitleaks on config/env changes). Enable once per clone: `git config core.hooksPath .githooks`. Emergency override: `PREPUSH_SKIP=all git push ...` (restore checks afterwards).
